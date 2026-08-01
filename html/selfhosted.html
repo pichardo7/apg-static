@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Self-hosted — Alejandro Pichardo</title>
+<meta name="description" content="Cómo está hecho este sitio: arquitectura self-hosted en un homelab, con Cloudflare, HTTPS automático, Docker y despliegue agéntico con n8n.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=2">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="apg.dev">
+<meta property="og:title" content="Self-hosted — Alejandro Pichardo">
+<meta property="og:description" content="Cómo está hecho este sitio: arquitectura self-hosted en un homelab, con Cloudflare, HTTPS automático, Docker y despliegue agéntico con n8n.">
+<meta property="og:image" content="https://apg.dev/og-image.png">
+<meta property="og:url" content="https://apg.dev/selfhosted.html">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body><header class="site">
+<div class="wrap nav">
+<a class="brand" href="index.html">apg<span class="amber">.dev</span><span class="cursor">_</span></a>
+<nav class="links">
+<a href="index.html">home</a>
+<a href="proyectos.html">proyectos</a>
+<a href="codigo.html">codigo</a>
+<a href="selfhosted.html" aria-current="page">selfhosted</a>
+</nav>
+</div>
+</header>
+<main>
+<section class="hero">
+<div class="wrap">
+<p class="eyebrow">// infraestructura</p>
+<h1 class="display">Self-hosted</h1>
+<p class="lede">Este sitio no vive en la nube de nadie más. Corre en mi propio homelab, de punta a punta — por control, por aprendizaje y por gusto.</p>
+<div class="cta-row">
+<span class="statusline"><span class="led"></span>homelab · docker · en línea</span>
+</div>
+</div>
+</section>
+<section class="section">
+<div class="wrap">
+<div class="section-label">el stack</div>
+<div class="grid">
+<article class="card">
+<div class="tag">// edge</div>
+<h3>Cloudflare al frente</h3>
+<p>DNS, CDN y una capa de protección antes de que cualquier petición llegue a casa. El origen nunca se expone directamente.</p>
+</article>
+<article class="card">
+<div class="tag">// tls</div>
+<h3>HTTPS automático</h3>
+<p>Un reverse proxy gestiona los certificados de Let's Encrypt y los renueva solo. Todo el tráfico va cifrado, sin intervención manual.</p>
+</article>
+<article class="card">
+<div class="tag">// app</div>
+<h3>Estático sobre Docker</h3>
+<p>La web es HTML y CSS servidos por nginx dentro de un contenedor. Rápido, ligero y sin base de datos que exponer: menos superficie, menos que romper.</p>
+</article>
+<article class="card">
+<div class="tag">// deploy</div>
+<h3>Despliegue agéntico</h3>
+<p>No subo archivos a mano. Flujos de n8n (con MCP) aplican los cambios por mí y verifican la integridad de cada archivo por checksum antes de publicarlo.</p>
+</article>
+</div>
+</div>
+</section>
+<section class="section">
+<div class="wrap">
+<div class="section-label">seguridad</div>
+<h2>La arquitectura, no el mapa</h2>
+<div class="prose">
+<p>Los detalles que de verdad importan — direcciones internas, puertos, nombres de host y credenciales — se quedan en casa. Lo que cuento aquí es cómo está pensado el sistema, no cómo entrar en él.</p>
+<p>Self-hosting no significa exponerlo todo: significa decidir exactamente qué sale a internet y qué no. Esa frontera es parte del diseño.</p>
+</div>
+<p class="sig">— hecho en el homelab</p>
+</div>
+</section>
+</main>
+<footer class="site">
+<div class="wrap foot">
+<span>apg<span style="color:var(--amber)">.dev</span> — código, electrónica y automatización</span>
+<span>© 2026 Alejandro Pichardo</span>
+</div>
+</footer>
+</body>
+</html>
