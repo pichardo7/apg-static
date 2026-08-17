@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P4mini — Alejandro Pichardo</title>
+<meta name="description" content="P4mini: una pantalla ESP32-P4 con ESPHome que muestra en tiempo real un dashboard de monitoreo de red, consultando Grafana y Postgres vía un webhook de n8n.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=2">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="apg.dev">
+<meta property="og:title" content="P4mini — Alejandro Pichardo">
+<meta property="og:description" content="P4mini: una pantalla ESP32-P4 con ESPHome que muestra en tiempo real un dashboard de monitoreo de red, consultando Grafana y Postgres vía un webhook de n8n.">
+<meta property="og:image" content="https://apg.dev/og-image.png">
+<meta property="og:url" content="https://apg.dev/p4mini.html">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body><header class="site">
+<div class="wrap nav">
+<a class="brand" href="index.html">apg<span class="amber">.dev</span><span class="cursor">_</span></a>
+<nav class="links">
+<a href="index.html">home</a>
+<a href="proyectos.html">proyectos</a>
+<a href="codigo.html">codigo</a>
+<a href="selfhosted.html">selfhosted</a>
+</nav>
+</div>
+</header>
+<main>
+<section class="hero">
+<div class="wrap">
+<p class="eyebrow">// hardware · iot</p>
+<h1 class="display">P4mini</h1>
+<p class="lede">Una pantalla montada sobre ESP32-P4 que muestra, en tiempo real, el estado de la red de una organización comunitaria — sin nube, sin app, sin Home Assistant de por medio.</p>
+<div class="cta-row">
+<span class="statusline"><span class="led"></span>esp32-p4 · esphome · lvgl</span>
+</div>
+</div>
+</section>
+<section class="section">
+<div class="wrap">
+<div class="section-label">qué es</div>
+<h2>Un dashboard que vive en una pantalla, no en un navegador</h2>
+<div class="prose">
+<p>P4mini es una pantalla táctil de 480×800 (board JC4880P443, touch GT911) sobre un ESP32-P4, configurada con <a href="https://esphome.io" target="_blank" rel="noopener">ESPHome</a>. Muestra en vivo el dashboard de monitoreo de red de "Podemos", una organización que da conectividad a centros comunitarios — problemas activos, incidentes recientes y uso de ancho de banda, todo dibujado con widgets nativos de LVGL en una sola página con scroll.</p>
+<p>No corre un navegador ni renderiza capturas de pantalla: pide un JSON pequeño, lo parsea y pinta los valores directamente sobre labels y badges de color. Tampoco usa la integración de Home Assistant — se decidió explícitamente dejarla fuera, porque el dashboard no tiene nada que ver con domótica.</p>
+</div>
+</div>
+</section>
+<section class="section">
+<div class="wrap">
+<div class="section-label">arquitectura</div>
+<h2>Cuatro saltos, sin renderizado de por medio</h2>
+<div class="prose">
+<p><code>ESP32-P4 (LVGL) → webhook de n8n → API de Grafana → Postgres</code></p>
+<p>Cada 45 segundos el ESP32 pide el JSON al webhook. n8n consulta la base de datos directo por la API de Grafana (<code>/api/ds/query</code>) y regresa un resumen ya armado — nada de renderizar imágenes ni capturas. El dispositivo solo dibuja lo que recibe.</p>
+</div>
+<div class="grid">
+<article class="card">
+<div class="tag">// display</div>
+<h3>Una página, no pestañas</h3>
+<p>Las cuatro secciones (resumen, problemas, incidentes, ancho de banda) van apiladas en un único contenedor scrolleable de LVGL — sin <code>tabview</code>, para mantenerlo simple y confiable.</p>
+</article>
+<article class="card">
+<div class="tag">// datos</div>
+<h3>JSON chico, sin imágenes</h3>
+<p>El payload trae el resumen más hasta cinco filas por sección. Se actualizan los widgets directo dentro del mismo callback de parseo, sin variables intermedias — patrón que salió de descartar un bug de filas que no se refrescaban.</p>
+</article>
+<article class="card">
+<div class="tag">// backend</div>
+<h3>n8n como intermediario</h3>
+<p>Un workflow de n8n hace de puente entre el dispositivo y Grafana: consulta Postgres vía la API de datasources de Grafana y entrega un JSON ya resumido, autenticado por header.</p>
+</article>
+</div>
+</div>
+</section>
+<section class="section">
+<div class="wrap">
+<div class="section-label">decisiones</div>
+<h2>Por qué no es una captura de pantalla</h2>
+<div class="prose">
+<p>La primera versión mostraba un screenshot completo del dashboard de Grafana, renderizado en el servidor y descargado por el ESP32. Se abandonó por dos razones concretas: le exigía a Grafana un render headless cada dos minutos, y en pruebas de campo de poco más de una hora casi la mitad de las descargas fallaba o se colgaba — una vez incluso disparó el watchdog del dispositivo y lo reinició.</p>
+<p>Los workflows de esa etapa siguen guardados en n8n, desactivados en vez de borrados, por si algún día vale la pena retomar un enfoque híbrido. Por ahora, un JSON chico pintado con widgets nativos es más rápido y muchísimo más confiable que mover una imagen completa cada par de minutos.</p>
+</div>
+<p class="sig">— construido a prueba y error, con el log del dispositivo como fuente de verdad</p>
+</div>
+</section>
+</main>
+<footer class="site">
+<div class="wrap foot">
+<span>apg<span style="color:var(--amber)">.dev</span> — código, electrónica y automatización</span>
+<span>© 2026 Alejandro Pichardo</span>
+</div>
+</footer>
+</body>
+</html>
